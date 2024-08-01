@@ -1,0 +1,53 @@
+{% set name = "keyrings.cryptfile" %}
+{% set version = "1.3.9" %}
+
+package:
+  name: {{ name|lower }}
+  version: {{ version }}
+
+source:
+  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/keyrings.cryptfile-{{ version }}.tar.gz
+  sha256: 7c2a453cab9985426b8c21f7ad54a57e49ff8e819ba18e08340bd8801acf0091
+
+build:
+  entry_points:
+    - cryptfile-convert = keyrings.cryptfile.convert:main
+  noarch: python
+  script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
+  number: 0
+
+requirements:
+  host:
+    - python >=3.5
+    - pip
+    - wheel
+  run:
+    - python >=3.5
+    - argon2_cffi
+    - jaraco.classes
+    - keyring >=20.0.0
+    - pycryptodome
+
+test:
+  imports:
+    - keyrings
+  commands:
+    - pip check
+    - cryptfile-convert --help
+  requires:
+    - pip
+
+about:
+  home: https://github.com/frispete/keyrings.cryptfile
+  summary: Encrypted file keyring backend
+  license: MIT
+  license_file: LICENSE.txt
+  dev_url: https://github.com/frispete/keyrings.cryptfile
+  doc_url: https://github.com/frispete/keyrings.cryptfile/blob/main/README.md
+
+extra:
+  anaconda-services:
+    ref: https://anaconda.zendesk.com/agent/tickets/52147
+    reason: Client request
+    recipe-maintainers:
+      - ianaobi
